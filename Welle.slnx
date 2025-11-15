@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FNA/FNA.Core.csproj" />
+  <Project Path="src/Welle/Welle.csproj" Id="b8942745-3930-4248-ab73-bdf5b679ef24" />
+</Solution>
