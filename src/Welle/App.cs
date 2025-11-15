@@ -1,11 +1,16 @@
-﻿using System;
+﻿using Lua;
+using Lua.Standard;
 using Microsoft.Xna.Framework;
+using System.Threading.Tasks;
 
 namespace Welle;
 
 public class App : Game
 {
     public string ProjectPath;
+
+    public LuaState LuaState;
+    public LuaFunction LuaUpdateFunction;
 
     public App(string projectPath)
     {
@@ -17,37 +22,41 @@ public class App : Game
         gdm.SynchronizeWithVerticalRetrace = true;
 
         Window.AllowUserResizing = true;
+        IsMouseVisible = true;
     }
 
-    protected override void Initialize()
+    protected async override void Initialize()
     {
-        /* This is a nice place to start up the engine, after
-         * loading configuration stuff in the constructor
-         */
+        LuaState = LuaState.Create();
+        LuaState.OpenStandardLibraries();
+
+        await LuaState.DoFileAsync(Path.Combine(ProjectPath, "main.lua"));
+
+        LuaUpdateFunction = LuaState.Environment["update"].Read<LuaFunction>();
+
+
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        // Load textures, sounds, and so on in here...
         base.LoadContent();
     }
 
     protected override void UnloadContent()
     {
-        // Clean up after yourself!
         base.UnloadContent();
     }
 
-    protected override void Update(GameTime gameTime)
+    protected async override void Update(GameTime gameTime)
     {
-        // Run game logic in here. Do NOT render anything here!
+        await LuaUpdateFunction.InvokeAsync(LuaState, new LuaValue[] {  });
+
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        // Render stuff in here. Do NOT run game logic in here!
         GraphicsDevice.Clear(Color.CornflowerBlue);
         base.Draw(gameTime);
     }
