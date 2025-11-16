@@ -1,45 +1,77 @@
 ﻿using Lua;
 using Lua.Standard;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Threading.Tasks;
+using Welle.Lua.Modules.Graphics;
 
 namespace Welle;
 
 public class App : Game
 {
+    public static App Instance;
+
     public string ProjectPath;
 
+    public GraphicsDeviceManager GraphicsDeviceManager;
+    public SpriteBatch SpriteBatch;
+
+    #region Lua
     public LuaState LuaState;
+
+    public LuaFunction LuaLoadFunction;
     public LuaFunction LuaUpdateFunction;
+    public LuaFunction LuaDrawFunction;
+
+    LuaTable WelleTable;
+
+    #endregion
 
     public App(string projectPath)
     {
         ProjectPath = projectPath;
 
-        GraphicsDeviceManager gdm = new GraphicsDeviceManager(this);
+        Instance = this;
 
-        gdm.IsFullScreen = false;
-        gdm.SynchronizeWithVerticalRetrace = true;
+        GraphicsDeviceManager = new GraphicsDeviceManager(this);
+
+        GraphicsDeviceManager.IsFullScreen = false;
+        GraphicsDeviceManager.SynchronizeWithVerticalRetrace = true;
 
         Window.AllowUserResizing = true;
         IsMouseVisible = true;
     }
 
-    protected async override void Initialize()
+    protected override void Initialize()
     {
         LuaState = LuaState.Create();
         LuaState.OpenStandardLibraries();
 
-        await LuaState.DoFileAsync(Path.Combine(ProjectPath, "main.lua"));
+        LuaState.DoFileAsync(Path.Combine(ProjectPath, "main.lua")).GetAwaiter().GetResult();
 
+        LuaLoadFunction = LuaState.Environment["load"].Read<LuaFunction>();
         LuaUpdateFunction = LuaState.Environment["update"].Read<LuaFunction>();
+        LuaDrawFunction = LuaState.Environment["draw"].Read<LuaFunction>();
 
+        WelleTable = new LuaTable();
+        LuaState.Environment["welle"] = WelleTable;
+
+        RegisterLuaModules();
 
         base.Initialize();
     }
 
+    public void RegisterLuaModules()
+    {
+        WelleTable["graphics"] = new LuaGraphics();
+    }
+
     protected override void LoadContent()
     {
+        SpriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
+
+        LuaLoadFunction.InvokeAsync(LuaState, new LuaValue[] { }).GetAwaiter().GetResult();
+
         base.LoadContent();
     }
 
@@ -48,9 +80,9 @@ public class App : Game
         base.UnloadContent();
     }
 
-    protected async override void Update(GameTime gameTime)
+    protected override void Update(GameTime gameTime)
     {
-        await LuaUpdateFunction.InvokeAsync(LuaState, new LuaValue[] {  });
+        LuaUpdateFunction.InvokeAsync(LuaState, new LuaValue[] { new LuaValue(gameTime.ElapsedGameTime.TotalSeconds) }).GetAwaiter().GetResult();
 
         base.Update(gameTime);
     }
@@ -58,6 +90,9 @@ public class App : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
+
+        LuaDrawFunction.InvokeAsync(LuaState, new LuaValue[] { }).GetAwaiter().GetResult();
+
         base.Draw(gameTime);
     }
 }
