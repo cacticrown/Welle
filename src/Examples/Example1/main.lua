@@ -7,7 +7,9 @@ function load()
 end
 
 function update(dt)
-
+    if welle.input.keyboard.isKeyDown("a") then
+       print("a is down")
+    end
 end
 
 function draw()

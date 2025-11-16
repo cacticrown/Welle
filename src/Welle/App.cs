@@ -2,14 +2,18 @@
 using Lua.Standard;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Threading.Tasks;
 using Welle.Lua.Modules.Graphics;
+using Welle.Lua.Modules.Input;
 
 namespace Welle;
 
 public class App : Game
 {
     public static App Instance;
+
+    public KeyboardState KeyboardState;
 
     public string ProjectPath;
 
@@ -64,6 +68,7 @@ public class App : Game
     public void RegisterLuaModules()
     {
         WelleTable["graphics"] = new LuaGraphics();
+        WelleTable["input"] = new LuaInput();
     }
 
     protected override void LoadContent()
@@ -82,6 +87,8 @@ public class App : Game
 
     protected override void Update(GameTime gameTime)
     {
+        KeyboardState = Keyboard.GetState();
+
         LuaUpdateFunction.InvokeAsync(LuaState, new LuaValue[] { new LuaValue(gameTime.ElapsedGameTime.TotalSeconds) }).GetAwaiter().GetResult();
 
         base.Update(gameTime);
