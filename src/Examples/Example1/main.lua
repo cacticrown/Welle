@@ -2,8 +2,8 @@ function load()
     textureX = 256
     textureY = 256
 
-    windowX = welle.window.getWidth()
-    windowY = welle.window.getHeight()
+    windowX = welle.window.width
+    windowY = welle.window.height
     print(windowX)
     x = math.random(windowX - textureX)
     y = math.random(windowY - textureY)
@@ -17,8 +17,8 @@ function load()
 end
 
 function update(dt)
-    windowX = welle.window.getWidth()
-    windowY = welle.window.getHeight()
+    windowX = welle.window.width
+    windowY = welle.window.height
 
     x = x + dirX * speed * dt
     y = y + dirY * speed * dt
