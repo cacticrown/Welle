@@ -1,29 +1,42 @@
-
 function load()
-    print("Hello from Welle!")
+    textureX = 256
+    textureY = 256
 
-    player = {
-        texture = welle.graphics.loadTexture("image.png")
-        x = 100,
-        y = 100,
-        speed = 5
-    }
+    windowX = welle.window.getWidth()
+    windowY = welle.window.getHeight()
+    print(windowX)
+    x = math.random(windowX - textureX)
+    y = math.random(windowY - textureY)
 
-    print(player.texture.path)
+    speed = 250
+
+    dirX = 1
+    dirY = 1
+
+    texture = welle.graphics.loadTexture("image.png")
 end
 
 function update(dt)
-    if welle.input.keyboard.isKeyDown("a") then
-       player.x = player.x - player.speed
+    windowX = welle.window.getWidth()
+    windowY = welle.window.getHeight()
+
+    x = x + dirX * speed * dt
+    y = y + dirY * speed * dt
+
+    if x <= 0 then
+        x = 0
+        dirX = 1
+    elseif x + textureX >= windowX then
+        x = windowX - textureX
+        dirX = -1
     end
-    if welle.input.keyboard.isKeyDown("d") then
-       player.x = player.x + player.speed
-    end
-    if welle.input.keyboard.isKeyDown("w") then
-       player.y = player.y - player.speed
-    end
-    if welle.input.keyboard.isKeyDown("s") then
-       player.y = player.y + player.speed
+
+    if y <= 0 then
+        y = 0
+        dirY = 1
+    elseif y + textureY >= windowY then
+        y = windowY - textureY
+        dirY = -1
     end
 end
 
@@ -31,6 +44,6 @@ function draw()
     welle.graphics.clear(0.5, 0.5, 0.5, 1)
 
     welle.graphics.beginDraw()
-    welle.graphics.draw(player.texture, player.x, player.y)
+    welle.graphics.draw(texture, x, y)
     welle.graphics.endDraw()
 end
