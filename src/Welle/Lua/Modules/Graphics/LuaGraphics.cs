@@ -19,8 +19,8 @@ public partial class LuaGraphics
     [LuaMember("loadTexture")]
     public static LuaTexture LoadTexture(string path)
     {
-        AssetManager.LoadTexture(path);
-        return new LuaTexture(path);
+        var texture = AssetManager.LoadTexture(path);
+        return new LuaTexture(path, texture.Width, texture.Height);
     }
 
     [LuaMember("draw")]

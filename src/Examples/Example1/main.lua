@@ -1,10 +1,12 @@
 function load()
-    textureX = 256
-    textureY = 256
+    texture = welle.graphics.loadTexture("image.png")
+
+    textureX = texture.width
+    textureY = texture.height
 
     windowX = welle.window.width
     windowY = welle.window.height
-    print(windowX)
+
     x = math.random(windowX - textureX)
     y = math.random(windowY - textureY)
 
@@ -12,8 +14,6 @@ function load()
 
     dirX = 1
     dirY = 1
-
-    texture = welle.graphics.loadTexture("image.png")
 end
 
 function update(dt)
