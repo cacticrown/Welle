@@ -41,7 +41,7 @@ function update(dt)
 end
 
 function draw()
-    welle.graphics.clear(0.5, 0.5, 0.5, 1)
+    welle.graphics.clear(welle.graphics.color.init(50, 50, 50, 255))
 
     welle.graphics.beginDraw()
     welle.graphics.draw(texture, x, y)
