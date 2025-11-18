@@ -1,6 +1,7 @@
 ﻿using Lua;
 using Microsoft.Xna.Framework;
 using Welle.Lua.Modules.Input;
+using Welle.Lua.Modules.Math;
 
 namespace Welle.Lua.Modules.Graphics;
 
@@ -24,9 +25,9 @@ public partial class LuaGraphics
     }
 
     [LuaMember("draw")]
-    public static void Draw(LuaTexture texture, float x, float y)
+    public static void Draw(LuaTexture texture, LuaVector2 position)
     {
-        App.Instance.SpriteBatch.Draw(AssetManager.LoadTexture(texture.Path), new Vector2(x, y), Microsoft.Xna.Framework.Color.White);
+        App.Instance.SpriteBatch.Draw(AssetManager.LoadTexture(texture.Path), position.ToXnaVector(), Microsoft.Xna.Framework.Color.White);
     }
 
     [LuaMember("beginDraw")]
