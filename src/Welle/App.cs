@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Threading.Tasks;
 using Welle.Lua.Modules.Graphics;
 using Welle.Lua.Modules.Input;
+using Welle.Lua.Modules.Math;
 using Welle.Lua.Modules.Window;
 
 namespace Welle;
@@ -71,6 +72,7 @@ public class App : Game
         WelleTable["graphics"] = new LuaGraphics();
         WelleTable["input"] = new LuaInput();
         WelleTable["window"] = new LuaWindow();
+        WelleTable["math"] = new LuaMath();
     }
 
     protected override void LoadContent()
