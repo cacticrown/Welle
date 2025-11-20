@@ -8,13 +8,10 @@ namespace Welle.Lua.Modules.Graphics;
 [LuaObject]
 public partial class LuaGraphics
 {
-    [LuaMember("color")]
-    public static LuaColor Color = new LuaColor();
-
     [LuaMember("clear")]
-    public static void Clear(LuaColor color)
+    public static void Clear(int r, int g, int b, int a)
     {
-        App.Instance.GraphicsDevice.Clear(color.ToXnaColor());
+        App.Instance.GraphicsDevice.Clear(new Color(r, g, b, a));
     }
 
     [LuaMember("loadTexture")]
@@ -25,9 +22,9 @@ public partial class LuaGraphics
     }
 
     [LuaMember("draw")]
-    public static void Draw(LuaTexture texture, LuaVector2 position)
+    public static void Draw(LuaTexture texture, float x, float y)
     {
-        App.Instance.SpriteBatch.Draw(AssetManager.LoadTexture(texture.Path), position.ToXnaVector(), Microsoft.Xna.Framework.Color.White);
+        App.Instance.SpriteBatch.Draw(AssetManager.LoadTexture(texture.Path), new Vector2(x, y), Color.White);
     }
 
     [LuaMember("beginDraw")]

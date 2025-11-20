@@ -7,7 +7,8 @@ function load()
     windowX = welle.window.width
     windowY = welle.window.height
 
-    position = welle.math.vector2.init(math.random(windowX - textureX), math.random(windowY - textureY))
+    x = math.random(windowX - textureX)
+    y = math.random(windowY - textureY)
 
     speed = 250
 
@@ -19,30 +20,30 @@ function update(dt)
     windowX = welle.window.width
     windowY = welle.window.height
 
-    position.x = position.x + dirX * speed * dt
-    position.y = position.y + dirY * speed * dt
+    x = x + dirX * speed * dt
+    y = y + dirY * speed * dt
 
-    if position.x <= 0 then
-        position.x = 0
+    if x <= 0 then
+        x = 0
         dirX = 1
-    elseif position.x + textureX >= windowX then
-        position.x = windowX - textureX
+    elseif x + textureX >= windowX then
+        x = windowX - textureX
         dirX = -1
     end
 
-    if position.y <= 0 then
-        position.y = 0
+    if y <= 0 then
+        y = 0
         dirY = 1
-    elseif position.y + textureY >= windowY then
-        position.y = windowY - textureY
+    elseif y + textureY >= windowY then
+        y = windowY - textureY
         dirY = -1
     end
 end
 
 function draw()
-    welle.graphics.clear(welle.graphics.color.init(50, 50, 50, 255))
+    welle.graphics.clear(50, 50, 50, 255)
 
-    welle.graphics.beginDraw()
-    welle.graphics.draw(texture, position)
+    welle.graphics.beginDraw(texture, x, y)
+    welle.graphics.draw(texture, x, y)
     welle.graphics.endDraw()
 end
