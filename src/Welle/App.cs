@@ -53,7 +53,7 @@ public class App : Game
         LuaState = LuaState.Create();
         LuaState.OpenStandardLibraries();
 
-        LuaState.DoFileAsync(Path.Combine(ProjectPath, "main.lua")).GetAwaiter().GetResult();
+        LuaState.DoFileAsync(Path.Combine(ProjectPath, "main.lua")).RunSynchronously();
 
         LuaLoadFunction = LuaState.Environment["load"].Read<LuaFunction>();
         LuaUpdateFunction = LuaState.Environment["update"].Read<LuaFunction>();
@@ -79,7 +79,7 @@ public class App : Game
     {
         SpriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
 
-        LuaLoadFunction.InvokeAsync(LuaState, new LuaValue[] { }).GetAwaiter().GetResult();
+        LuaState.CallAsync(LuaLoadFunction, []).RunSynchronously();
 
         base.LoadContent();
     }
@@ -93,7 +93,7 @@ public class App : Game
     {
         KeyboardState = Keyboard.GetState();
 
-        LuaUpdateFunction.InvokeAsync(LuaState, new LuaValue[] { new LuaValue(gameTime.ElapsedGameTime.TotalSeconds) }).GetAwaiter().GetResult();
+        LuaState.CallAsync(LuaUpdateFunction, [gameTime.ElapsedGameTime.TotalSeconds]).RunSynchronously();
 
         base.Update(gameTime);
     }
@@ -102,7 +102,7 @@ public class App : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        LuaDrawFunction.InvokeAsync(LuaState, new LuaValue[] { }).GetAwaiter().GetResult();
+        LuaState.CallAsync(LuaDrawFunction, []).RunSynchronously();
 
         base.Draw(gameTime);
     }
